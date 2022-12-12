@@ -1,8 +1,8 @@
-import user from "../models/userModel.js";
+import User from "../models/userModel.js";
 
 const createUser = async (req, res, next) => {
   try {
-    const newUser = new user(req.body);
+    const newUser = new User(req.body);
     const createdUser = await newUser.save();
     return res.status(201).json(createdUser);
   } catch (error) {
@@ -12,7 +12,7 @@ const createUser = async (req, res, next) => {
 
 const getUsers = async (req, res, next) => {
   try {
-    const users = await user.find({});
+    const users = await User.find({});
     if (users) return res.status(200).json(users);
     else return res.status(404).json({message: "No user found"});
   } catch (error) {
@@ -22,8 +22,8 @@ const getUsers = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   try {
-    const userX = await user.findById(req.params.id);
-    if (userX) return res.status(200).json(userX);
+    const user = await User.findById(req.params.id);
+    if (user) return res.status(200).json(user);
     else return res.status(404).json({message: "User Not Found"});
   } catch (error) {
     next(error);
@@ -32,8 +32,13 @@ const getUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({message: "User not Found"});
+    }
+
     let filter = {_id: req.params.id};
-    let updatedUser = await user.findOneAndUpdate(filter, req.body, {
+    let updatedUser = await User.findOneAndUpdate(filter, req.body, {
       new: true,
       runValidators: true,
     });
@@ -45,11 +50,11 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    const userX = await user.findById(req.params.id);
+    const user = await User.findById(req.params.id);
 
-    if (userX) {
-      await userX.remove();
-      return res.status(200).json({message: "User removed", _id: req.params.id});
+    if (user) {
+      await user.remove();
+      return res.status(200).json({message: `User ${req.params.id} removed`});
     } else {
       res.status(404);
       throw new Error("User not found");

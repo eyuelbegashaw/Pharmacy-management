@@ -1,8 +1,8 @@
-import supplier from "../models/supplierModel.js";
+import Supplier from "../models/supplierModel.js";
 
 const createSupplier = async (req, res, next) => {
   try {
-    const newSupplier = new supplier(req.body);
+    const newSupplier = new Supplier(req.body);
     const createdSupplier = await newSupplier.save();
     return res.status(201).json(createdSupplier);
   } catch (error) {
@@ -12,7 +12,7 @@ const createSupplier = async (req, res, next) => {
 
 const getSuppliers = async (req, res, next) => {
   try {
-    const suppliers = await supplier.find({});
+    const suppliers = await Supplier.find({});
     if (suppliers) return res.status(200).json(suppliers);
     else return res.status(404).json({message: "No supplier found"});
   } catch (error) {
@@ -22,8 +22,8 @@ const getSuppliers = async (req, res, next) => {
 
 const getSupplier = async (req, res, next) => {
   try {
-    const supplierX = await supplier.findById(req.params.id);
-    if (supplierX) return res.status(200).json(supplierX);
+    const supplier = await Supplier.findById(req.params.id);
+    if (supplier) return res.status(200).json(supplier);
     else return res.status(404).json({message: "Supplier Not Found"});
   } catch (error) {
     next(error);
@@ -32,8 +32,13 @@ const getSupplier = async (req, res, next) => {
 
 const updateSupplier = async (req, res, next) => {
   try {
+    const supplier = await Supplier.findById(req.params.id);
+    if (!supplier) {
+      return res.status(404).json({message: "Supplier Not Found"});
+    }
+
     let filter = {_id: req.params.id};
-    let updatedSupplier = await supplier.findOneAndUpdate(filter, req.body, {
+    let updatedSupplier = await Supplier.findOneAndUpdate(filter, req.body, {
       new: true,
       runValidators: true,
     });
@@ -45,11 +50,11 @@ const updateSupplier = async (req, res, next) => {
 
 const deleteSupplier = async (req, res, next) => {
   try {
-    const supplierX = await supplier.findById(req.params.id);
+    const supplier = await Supplier.findById(req.params.id);
 
-    if (drugX) {
-      await supplierX.remove();
-      return res.status(200).json({message: "Supplier removed", _id: req.params.id});
+    if (supplier) {
+      await supplier.remove();
+      return res.status(200).json({message: `Supplier ${req.params.id} removed`});
     } else {
       res.status(404);
       throw new Error("Supplier not found");

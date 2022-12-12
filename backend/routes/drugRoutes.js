@@ -4,17 +4,17 @@ const router = express.Router();
 //Controllers
 import {
   getDrugs,
-  createDrugs,
-  updateDrugs,
-  deleteDrugs,
+  createDrug,
+  updateDrug,
+  deleteDrug,
   getDrug,
 } from "../controllers/drugController.js";
 
 //Routes
 router.get("/", getDrugs);
-router.post("/", createDrugs);
+router.post("/", createDrug);
 router.get("/:id", getDrug);
-router.delete("/:id", deleteDrugs);
-router.put("/:id", updateDrugs);
+router.delete("/:id", deleteDrug);
+router.put("/:id", updateDrug);
 
 export default router;

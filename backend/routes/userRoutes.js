@@ -11,7 +11,7 @@ import {
 } from "../controllers/userController.js";
 
 //Routes
-router.get("/", getUser);
+router.get("/", getUsers);
 router.post("/", createUser);
 router.get("/:id", getUser);
 router.delete("/:id", deleteUser);

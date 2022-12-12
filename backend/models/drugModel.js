@@ -23,6 +23,7 @@ const drugSchema = mongoose.Schema(
     batch_number: {
       type: String,
       required: true,
+      unique: true,
     },
     purchased_price: {
       type: Number,

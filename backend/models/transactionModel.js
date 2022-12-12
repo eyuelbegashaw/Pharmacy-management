@@ -26,7 +26,7 @@ const transactionSchema = mongoose.Schema(
     sale_by: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "staff",
+      ref: "user",
     },
     profit: {
       type: Number,
