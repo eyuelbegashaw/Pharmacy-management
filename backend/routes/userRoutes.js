@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 
+import {protect, admin} from "../middlewares/authMiddleware";
+
 import {
   loginUser,
   registerUser,
@@ -14,17 +16,17 @@ import {
   checkLink,
 } from "../controllers/userController.js";
 
-router.get("/", getAllUsers);
-router.put("/profile", updateProfile);
+router.get("/", protect, admin, getAllUsers);
+router.put("/profile", protect, updateProfile);
 router.put("/forgot-password", forgotPassword);
 router.put("/reset-password", resetPassword);
 router.get("/checkLink", checkLink);
 
 router.post("/login", loginUser);
 router.post("/register", registerUser);
-router.get("/profile", getProfile);
+router.get("/profile", protect, getProfile);
 
-router.delete("/:id", deleteUser);
-router.put("/:id", updateUser);
+router.delete("/:id", protect, admin, deleteUser);
+router.put("/:id", protect, admin, updateUser);
 
 export default router;

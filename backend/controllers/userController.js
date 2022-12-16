@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 import User from "../models/userModel.js";
 import generateToken from "../util/generateToken.js";
@@ -60,14 +60,15 @@ const getAllUsers = async (req, res, next) => {
 const getProfile = async (req, res, next) => {
   try {
     if (!req.user.id) {
-      return res.status(404).json({message: "User Not Found"});
+      return res.status(404).json({message: "User not found"});
     }
+
     const user = await User.findById(req.user.id).select("-password");
     if (user) {
       res.status(200).json(user);
     } else {
       res.status(404);
-      throw new Error("User Not Found");
+      throw new Error("User not found");
     }
   } catch (error) {
     next(error);
@@ -76,9 +77,13 @@ const getProfile = async (req, res, next) => {
 
 const updateProfile = async (req, res, next) => {
   try {
+    if (!req.user.id) {
+      return res.status(404).json({message: "User fot found"});
+    }
+
     const user = await User.findById(req.user.id);
     if (!user) {
-      return res.status(404).json({message: "User Not Found"});
+      return res.status(404).json({message: "User not found"});
     } else {
       let filter = {_id: req.user.id};
       if (req.body.password) {
@@ -109,7 +114,7 @@ const deleteUser = async (req, res, next) => {
     const user = await User.findById(req.params.id);
     if (user) {
       await user.remove();
-      return res.status(200).json({message: `User ${req.params.id}removed`});
+      return res.status(200).json({message: `User ${req.params.id} removed`});
     } else {
       res.status(404);
       throw new Error("User not found");
@@ -225,7 +230,7 @@ const resetPassword = async (req, res, next) => {
 
     if (!resetLink || !newPassword) {
       res.status(400);
-      throw new Error("required datas are not provided");
+      throw new Error("Invalid data");
     } else {
       const decoded = jwt.verify(resetLink, process.env.JWT_SECRET);
       if (decoded) {
