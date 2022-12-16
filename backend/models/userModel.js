@@ -6,9 +6,9 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    role: {
-      type: String,
-      required: true,
+    isAdmin: {
+      type: Boolean,
+      default: false,
     },
     gender: {
       type: String,
@@ -33,6 +33,10 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       minLength: 4,
+    },
+    resetLink: {
+      type: String,
+      default: "",
     },
   },
   {

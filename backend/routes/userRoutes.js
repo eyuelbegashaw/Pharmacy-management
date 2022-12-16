@@ -1,19 +1,29 @@
 import express from "express";
 const router = express.Router();
 
-//Controllers
 import {
-  getUser,
-  createUser,
-  updateUser,
+  loginUser,
+  registerUser,
+  getProfile,
+  getAllUsers,
+  updateProfile,
   deleteUser,
-  getUsers,
+  updateUser,
+  forgotPassword,
+  resetPassword,
+  checkLink,
 } from "../controllers/userController.js";
 
-//Routes
-router.get("/", getUsers);
-router.post("/", createUser);
-router.get("/:id", getUser);
+router.get("/", getAllUsers);
+router.put("/profile", updateProfile);
+router.put("/forgot-password", forgotPassword);
+router.put("/reset-password", resetPassword);
+router.get("/checkLink", checkLink);
+
+router.post("/login", loginUser);
+router.post("/register", registerUser);
+router.get("/profile", getProfile);
+
 router.delete("/:id", deleteUser);
 router.put("/:id", updateUser);
 
