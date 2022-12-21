@@ -13,6 +13,9 @@ import supplierRoutes from "./routes/supplierRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
+//middlewares
+import {NotFound, ErrorMiddleware} from "./middlewares/errorMiddleware.js";
+
 //Configs
 dotenv.config();
 connectDB();
@@ -26,6 +29,9 @@ app.use("/api/stock", stockRoutes);
 app.use("/api/supplier", supplierRoutes);
 app.use("/api/transaction", transactionRoutes);
 app.use("/api/user", userRoutes);
+
+app.use(NotFound);
+app.use(ErrorMiddleware);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`server running in ${process.env.NODE_ENV} mode on port ${PORT}`));

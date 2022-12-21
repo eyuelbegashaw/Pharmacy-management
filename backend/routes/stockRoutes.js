@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 
+import {protect, admin} from "../middlewares/authMiddleware.js";
+
 //Controllers
 import {
   getStocks,
@@ -11,10 +13,10 @@ import {
 } from "../controllers/stockController.js";
 
 //Routes
-router.get("/", getStocks);
-router.post("/", createStock);
-router.get("/:id", getStock);
-router.delete("/:id", deleteStock);
-router.put("/:id", updateStock);
+router.get("/", protect, getStocks);
+router.post("/", protect, admin, createStock);
+router.get("/:id", protect, admin, getStock);
+router.delete("/:id", protect, admin, deleteStock);
+router.put("/:id", protect, admin, updateStock);
 
 export default router;

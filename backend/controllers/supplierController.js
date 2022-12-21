@@ -1,8 +1,15 @@
 import Supplier from "../models/supplierModel.js";
+import cloudinary from "../util/cloudinary.js";
 
 const createSupplier = async (req, res, next) => {
   try {
-    const newSupplier = new Supplier(req.body);
+    const result = await cloudinary.uploader.upload(req.file.path);
+
+    const newSupplier = new Supplier({
+      ...req.body,
+      image: result.secure_url,
+      cloudinary_id: result.public_id,
+    });
     const createdSupplier = await newSupplier.save();
     return res.status(201).json(createdSupplier);
   } catch (error) {
@@ -37,11 +44,18 @@ const updateSupplier = async (req, res, next) => {
       return res.status(404).json({message: "Supplier Not Found"});
     }
 
+    await cloudinary.uploader.destroy(supplier.cloudinary_id);
+    let result = await cloudinary.uploader.upload(req.file.path);
+
     let filter = {_id: req.params.id};
-    let updatedSupplier = await Supplier.findOneAndUpdate(filter, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    let updatedSupplier = await Supplier.findOneAndUpdate(
+      filter,
+      {...req.body, image: result.secure_url, cloudinary_id: result.public_id},
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
     return res.status(201).json(updatedSupplier);
   } catch (error) {
     next(error);
@@ -53,6 +67,7 @@ const deleteSupplier = async (req, res, next) => {
     const supplier = await Supplier.findById(req.params.id);
 
     if (supplier) {
+      await cloudinary.uploader.destroy(supplier.cloudinary_id);
       await supplier.remove();
       return res.status(200).json({message: `Supplier ${req.params.id} removed`});
     } else {

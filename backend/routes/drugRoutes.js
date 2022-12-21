@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 
+import {protect, admin} from "../middlewares/authMiddleware.js";
+
 //Controllers
 import {
   getDrugs,
@@ -11,10 +13,10 @@ import {
 } from "../controllers/drugController.js";
 
 //Routes
-router.get("/", getDrugs);
-router.post("/", createDrug);
-router.get("/:id", getDrug);
-router.delete("/:id", deleteDrug);
-router.put("/:id", updateDrug);
+router.get("/", protect, getDrugs);
+router.post("/", protect, createDrug);
+router.get("/:id", protect, getDrug);
+router.delete("/:id", protect, deleteDrug);
+router.put("/:id", protect, updateDrug);
 
 export default router;

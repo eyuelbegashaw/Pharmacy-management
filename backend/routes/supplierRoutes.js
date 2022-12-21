@@ -1,6 +1,9 @@
 import express from "express";
 const router = express.Router();
 
+import upload from "../util/multer.js";
+import {protect, admin} from "../middlewares/authMiddleware.js";
+
 //Controllers
 import {
   getSuppliers,
@@ -11,10 +14,10 @@ import {
 } from "../controllers/supplierController.js";
 
 //Routes
-router.get("/", getSuppliers);
-router.post("/", createSupplier);
-router.get("/:id", getSupplier);
-router.delete("/:id", deleteSupplier);
-router.put("/:id", updateSupplier);
+router.get("/", protect, admin, getSuppliers);
+router.post("/", protect, admin, upload.single("image"), createSupplier);
+router.get("/:id", protect, admin, getSupplier);
+router.delete("/:id", protect, admin, deleteSupplier);
+router.put("/:id", protect, admin, upload.single("image"), updateSupplier);
 
 export default router;
